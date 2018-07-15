@@ -1,7 +1,8 @@
 const whiler = require('whiler');
 
 module.exports = source => {
-    const getWorker = () => source && source.shift ? source.shift() || null : null;
+    source = (Array.isArray(source) ? source : []).filter(f => typeof f === 'function');
+    const getWorker = () => source.shift() || null;
     const thread = () => {
         const worker = getWorker();
         if(worker === null) return false;
