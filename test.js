@@ -11,3 +11,20 @@ test('single', async t => {
     await lavine([() => false]).then(() => t.pass());
     await lavine([() => ''.throwHere()]).then(() => t.pass());
 });
+
+test('multi', async t => {
+    const log = [];
+    await lavine([
+        () => {
+            log.push(1);
+            ''.throwHere();
+        },
+        () => {
+            log.push(2);
+        },
+        () => {
+            t.fail();
+        },
+    ]);
+    t.deepEqual(log, [1, 2]);
+});
