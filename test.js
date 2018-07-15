@@ -11,11 +11,15 @@ test('empty', async t => {
 test('single', async t => {
     await lavine([() => false]).then(() => t.pass());
     await lavine([() => ''.throwHere()]).then(() => t.pass());
+    await lavine(['bad']).then(() => t.pass());
+    await lavine([false]).then(() => t.pass());
 });
 
 test('multi', async t => {
     const log = [];
     await lavine([
+        'bad',
+        false,
         () => {
             log.push(1);
             ''.throwHere();
