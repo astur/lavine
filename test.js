@@ -1,7 +1,6 @@
 const test = require('ava');
-const m = require('.');
+const lavine = require('.');
 
-test('lavine', t => {
-    t.true(true);
-    t.is(m, m);
+test('empty', async t => {
+    await lavine([]).then(() => t.pass());
 });
