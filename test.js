@@ -9,10 +9,17 @@ test('empty', async t => {
 });
 
 test('single', async t => {
+    const log = [];
+    await lavine(() => false).then(() => t.pass());
     await lavine([() => false]).then(() => t.pass());
+    await lavine(() => ''.throwHere()).then(() => t.pass());
     await lavine([() => ''.throwHere()]).then(() => t.pass());
     await lavine(['bad']).then(() => t.pass());
     await lavine([false]).then(() => t.pass());
+    await lavine(() => {
+        log.push('ok');
+    });
+    t.deepEqual(log, ['ok']);
 });
 
 test('multi', async t => {
