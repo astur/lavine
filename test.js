@@ -60,3 +60,36 @@ test('async', async t => {
     ]);
     t.deepEqual(log, [1, 2]);
 });
+
+test('concurrency', async t => {
+    const log = [];
+    await lavine([
+        async () => {
+            await delay(40);
+            log.push(1);
+            ''.throwHere();
+        },
+        async () => {
+            await delay(10);
+            log.push(2);
+            ''.throwHere();
+        },
+        async () => {
+            await delay(10);
+            log.push(3);
+        },
+        async () => {
+            await delay(10);
+            log.push(4);
+        },
+        async () => {
+            await delay(10);
+            t.fail();
+        },
+        async () => {
+            await delay(10);
+            t.fail();
+        },
+    ], 2);
+    t.deepEqual(log, [2, 3, 1, 4]);
+});
