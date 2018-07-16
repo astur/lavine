@@ -1,6 +1,6 @@
 {
   "name": "lavine",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "yet another async control flow engine",
   "main": "index.js",
   "author": "astur <astur@yandex.ru> (http://kozlov.am/)",
