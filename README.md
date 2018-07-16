@@ -1,21 +1,11 @@
 # lavine
 
-lavine description here
-
 [![Build Status][travis-image]][travis-url]
 [![NPM version][npm-image]][npm-url]
 
-## Install
+## TODO:
 
-```bash
-npm i lavine
-```
-
-## Usage
-
-```js
-const lavine = require('lavine');
-```
+* Good 'readme' manual
 
 ## License
 
