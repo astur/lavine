@@ -2,7 +2,8 @@ const whiler = require('whiler');
 
 module.exports = (source, concurrency) => {
     source = (Array.isArray(source) ? source : [source]).filter(f => typeof f === 'function');
-    concurrency = Number.isInteger(concurrency) && concurrency > 1 ? concurrency : 1;
+    if(concurrency === 0 || concurrency > source.length) concurrency = source.length;
+    if(!Number.isInteger(concurrency) || concurrency < 0) concurrency = 1;
     const getWorker = () => source.shift() || null;
     const thread = () => {
         const worker = getWorker();
