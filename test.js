@@ -93,3 +93,16 @@ test('concurrency', async t => {
     ], 2);
     t.deepEqual(log, [2, 3, 1, 4]);
 });
+
+test('auto concurrency', async t => {
+    const ts = Date.now();
+    await lavine([
+        async () => {
+            await delay(100);
+        },
+        async () => {
+            await delay(100);
+        },
+    ], 0);
+    t.true(Date.now() - ts < 150);
+});
