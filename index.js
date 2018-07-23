@@ -1,6 +1,7 @@
 const whiler = require('whiler');
 
 module.exports = (source, concurrency) => {
+    if(!Array.isArray(source) && typeof source !== 'function') return Promise.resolve();
     source = (Array.isArray(source) ? source : [source]).filter(f => typeof f === 'function');
     if(concurrency === 0 || concurrency > source.length) concurrency = source.length;
     if(!Number.isInteger(concurrency) || concurrency < 0) concurrency = 1;
