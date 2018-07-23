@@ -98,13 +98,13 @@ test('auto concurrency', async t => {
     const ts = Date.now();
     await lavine([
         async () => {
-            await delay(100);
+            await delay(50);
         },
         async () => {
-            await delay(100);
+            await delay(50);
         },
     ], 0);
-    t.true(Date.now() - ts < 150);
+    t.true(Date.now() - ts < 80);
 });
 
 test('factory', async t => {
