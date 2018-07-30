@@ -41,6 +41,99 @@ Worker function may be sync or async, it does not matter (but usually it is asyn
 * throws or rejects error or anything - means this worker becomes obsolete and `lavine` must run next worker from source (if present).
 * returns `false` or promise of `false` - means all work is done and `lavine` may finish it's work (or finish work of this one of parallel flows).
 
+## Use cases
+
+### Repeat same worker in serial
+
+In this case `lavine` works as async while-cycle
+
+```js
+const worker = () => {
+    // Take one task from some bunch
+    // (queue, predefined array, anything else...)
+
+    // Do the task
+
+    // Save result somewhere
+    // (database, file,  anything else...)
+
+    // It may be delayed with 'p-min-delay' or 'unquick'
+
+    // return true if there is more tasks to do
+    // or
+    // return false if all tasks done
+};
+
+lavine([worker]);
+// or
+// lavine(() => worker);
+```
+
+### Repeat same worker in limited parallel
+
+In this case `lavine` runs several independent async while-cycles with same worker.
+
+```js
+const worker = () => {/* See above */};
+
+lavine(() => worker, concurrency);
+// It is pretty much the same as this:
+// Promise.all([...Array(concurrency)].map(() => lavine(() => worker), 0);
+```
+
+Note that if one worker returns `false` only one of parallel flows will be stopped. But if workers in all flows get tasks from same source it means that all of them will return `false` after source is depleted.
+
+### Work with initialized sessions
+
+When doing in cycle network task that requires initialized session and when session expires it must be reinitialized.
+
+```js
+const worker = (session) => {
+    // Same as above but using session
+
+    // return true or false in same cases as above
+    // throw/reject if session expired
+    // it does not matter what exactly to throw/reject
+};
+const init = () => {
+    // Do something and returns initialized session
+    // For example, authorize on site and returns cookies
+    // Let's return falsy value if authorization is impossible
+};
+
+lavine(() => {
+    const session = init();
+    if (!session) return null;
+    return () => worker(session);
+});
+```
+
+### Work with proxy list
+
+When doing in cycle network task that requires proxy and when particular proxy becomes blocked it most be replaced on next one from proxy list.
+
+```js
+const proxyList = [
+    'http://s1.myproxy.com',
+    'http://s2.myproxy.com',
+    'http://s3.myproxy.com',
+    'http://s4.myproxy.com',
+    'http://s5.myproxy.com',
+];
+
+const worker = (proxy) => {
+    // Same as above but using proxy
+
+    // return true or false in same cases as above
+    // throw/reject if proxy blocked
+    // it does not matter what exactly to throw/reject
+};
+
+lavine(proxyList.map(proxy => () => worker(proxy)), concurrency);
+```
+
+Note that if `concurrency` is less then `proxyList.length` and no one proxy will be blocked then rest of `proxyList` will never be used.
+
 ## License
 
 MIT
