@@ -28,7 +28,7 @@ lavine([worker1, worker2, worker3]);
 ```js
 const workers = [worker1, worker2, worker3];
 
-lavine(() => workers.shift || null);
+lavine(() => workers.shift() || null);
 ```
 
 If `source` is not an array and not a function, `lavine` does nothing and returns immediately.
