@@ -1,3 +1,4 @@
+/* eslint no-use-extend-native/no-use-extend-native: off */
 const test = require('ava');
 const lavine = require('.');
 const delay = require('delay');
