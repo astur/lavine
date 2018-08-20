@@ -1,9 +1,10 @@
 const whiler = require('whiler');
 
-module.exports = (source, concurrency) => {
-    const isA = Array.isArray(source);
-    if(!isA && typeof source !== 'function') return Promise.resolve();
-    source = isA ? source.filter(f => typeof f === 'function') : source;
+module.exports = (src, _concurrency) => {
+    const isA = Array.isArray(src);
+    if(!isA && typeof src !== 'function') return Promise.resolve();
+    const source = isA ? src.filter(f => typeof f === 'function') : src;
+    let concurrency = _concurrency;
     if(isA && (concurrency === 0 || concurrency > source.length)) concurrency = source.length;
     if(!Number.isInteger(concurrency) || concurrency < 0) concurrency = 1;
     const getWorker = isA ? () => source.shift() || null : source;
